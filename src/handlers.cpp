@@ -17,12 +17,12 @@ void handlers::MessageHandler::addHandler(const std::string& cmd, handler_t hand
   cmdHandlers_[cmd] = handler;
 }
 
-void handlers::MessageHandler::addHandler(const states::State& state, handler_t handler)
+void handlers::MessageHandler::addHandler(const states::State& state, state_handler_t handler)
 {
   stateHandlers_[state] = handler;
 }
 
-void handlers::MessageHandler::addHandler(const std::string& cmd, const states::State& state, handler_t handler)
+void handlers::MessageHandler::addHandler(const std::string& cmd, const states::State& state, state_handler_t handler)
 {
   stateCmdHandlers_[{cmd, state}] = handler;
 }
@@ -34,12 +34,17 @@ void handlers::MessageHandler::processMessage(const types::Message& msg, states:
   bool isHandlerExists = false;
   if (currentState == states::StateMachine::DEFAULT_STATE)
   {
-    cmdHandlers_.at(cmd)(msg, state);
+    try
+    {
+      cmdHandlers_.at(cmd)(msg);
+    }
+    catch (const std::exception&)
+    {}
     return;
   }
   try
   {
-    const handlers::MessageHandler::handler_t& handler = stateCmdHandlers_.at({cmd, currentState});
+    const handlers::MessageHandler::state_handler_t& handler = stateCmdHandlers_.at({cmd, currentState});
     isHandlerExists = true;
     handler(msg, state);
   }
@@ -47,7 +52,12 @@ void handlers::MessageHandler::processMessage(const types::Message& msg, states:
   {
     if (!isHandlerExists)
     {
-      stateHandlers_.at(currentState)(msg, state);
+      try
+      {
+        stateHandlers_.at(currentState)(msg, state);
+      }
+      catch(const std::exception&)
+      {}
     }
   }
 }

@@ -244,6 +244,11 @@ cppbot::Bot::futureFile cppbot::Bot::getFile(const std::string& fileId)
   return sendRequest< types::File >(body.dump(), "/getFile");
 }
 
+states::StateContext cppbot::Bot::getStateContext(size_t chatId)
+{
+  return states::StateContext(chatId, &stateMachine_);
+}
+
 void cppbot::Bot::runIoContext()
 {
   asio::executor_work_guard< asio::io_context::executor_type > work = asio::make_work_guard(ioContext_);

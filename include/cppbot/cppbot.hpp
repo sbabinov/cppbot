@@ -63,6 +63,8 @@ namespace cppbot
       const types::InlineKeyboardMarkup& replyMarkup);
 
     futureFile    getFile               (const std::string& fileId);
+
+    states::StateContext getStateContext(size_t chatId);
    private:
     std::string token_;
     std::shared_ptr< handlers::MessageHandler > mh_;

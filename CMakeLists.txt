@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.14)
 project(cppbot
     VERSION 1.0.0
     DESCRIPTION "Library for creating Telegram bots"
@@ -23,7 +23,7 @@ include(GNUInstallDirs)
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_level)
 
 # CPPBOT_SHARED_LIBS (library will build as shared if defined)
-option(CPPBOT_BUILD_EXAMPLES "Build cppbot examples" OFF)
+option(CPPBOT_BUILD_EXAMPLES "Build cppbot examples" ON)
 option(CPPBOT_BUILD_DOCS "Build cppbot documentation" OFF)
 option(CPPBOT_INSTALL "Generate targer for installing cppbot" ${is_top_level})
 set_if_undefined(CPPBOT_INSTALL_CMAKEDIR
@@ -179,12 +179,11 @@ endif()
 # other targets
 #----------------------------------------------------------------------------------------------------------------------
 
-if(MYLIB_BUILD_EXAMPLES)
+if(CPPBOT_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(MYLIB_BUILD_DOCS)
+if(CPPBOT_BUILD_DOCS)
     find_package(Doxygen REQUIRED)
     doxygen_add_docs(docs include)
 endif()
-
